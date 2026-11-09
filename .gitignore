@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.ipynb_checkpoints/
+.venv/
+# Données brutes : trop lourdes pour Git
+data/*
+!data/.gitkeep
+
+# Documents de cadrage (lourds ou privés) : restent dans le dossier, hors de Git
+*.pdf
+img_projet.png
+Resum*_Reunion_PBI.txt

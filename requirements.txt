@@ -1,0 +1,7 @@
+# Python 3.10 ou plus
+numpy>=1.24        # calcul vectorisé, tout le cœur du projet
+scipy>=1.10        # Rotation : sert à VÉRIFIER nos fonctions SO(3), pas à les remplacer
+matplotlib>=3.7    # figures (erreur géodésique en degrés)
+pandas>=2.0        # lecture et nettoyage des CSV (EuRoC, données ENAC)
+pytest>=7.0        # tests unitaires
+# torch            # à décommenter pour les étapes E et G seulement
