@@ -1,0 +1,3 @@
+methode,parametres_standardises,mse_train,mse_test,rmse_test_mpg,r2_test
+lineaire,"{'w': np.float64(-0.7784), 'b': np.float64(-0.0)}",24.4274859453218,22.114384634732183,4.702593394578377,0.6025282998534749
+exponentielle,"{'a': np.float64(1.5617), 'b': np.float64(0.5963), 'c': np.float64(-1.8035)}",19.734291317434554,16.9635199139981,4.118679389561428,0.6951070892519133

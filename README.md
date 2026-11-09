@@ -9,6 +9,10 @@ que les sorties restent dans SO(3). Contexte complet : [CLAUDE.md](CLAUDE.md).
 pip install -r requirements.txt
 ```
 
+## Données
+
+Télécharger `auto-mpg.data` depuis https://archive.ics.uci.edu/ml/machine-learning-databases/auto-mpg/auto-mpg.data dans `data/`.
+
 ## Lancer les tests
 
 ```bash
@@ -19,6 +23,10 @@ python -m pytest -v
 
 | Dossier | Contenu |
 |---|---|
+| `src/regression.py` | Régressions à la main : modèles linéaire et exponentiel, descente de gradient, gradient check |
+| `src/auto_mpg.py` | Chargement et nettoyage du jeu réel Auto MPG (UCI) |
+| `experiments/` | Scripts d'expérience (`python -m experiments.etape_A_regression`) |
+| `results/` | Résultats chiffrés (CSV) |
 | `src/so3.py` | Outils SO(3) : `hat`, `vee`, `exp_map`, `log_map`, `geodesic_distance`, `is_rotation`, `project_to_so3`, `random_rotation`, `add_noise` |
 | `tests/` | Tests unitaires (propriétés mathématiques, comparaison avec SciPy) |
 | `data/` | Données brutes (non versionnées) |
@@ -28,6 +36,6 @@ python -m pytest -v
 ## Avancement
 
 - [x] B : utilitaires SO(3) testés
-- [ ] A : régression linéaire puis non linéaire en numpy (pour le 27 novembre)
+- [x] A : régression linéaire puis non linéaire en numpy (Auto MPG, figures dans `report/figures/`)
 - [ ] C : données synthétiques + EuRoC
 - [ ] D : moyenne de Fréchet par descente de gradient sur SO(3)
