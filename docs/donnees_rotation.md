@@ -26,6 +26,18 @@ Pour l'apprentissage supervisé, chaque instant doit fournir une **paire** :
 2. **Puis EuRoC MAV** (séquence `MH_01_easy`) pour un cas drone, plus proche du discours de la présentation de Samy Labsir.
 3. Garder les données de l'ENAC (annoncées par l'encadrant) pour la validation finale.
 
+## Premier résultat sur BROAD (17 novembre 2026)
+
+Téléchargé dans `data/broad/` (39 essais, 159 Mo, 4,2 % d'orientations de référence manquantes en moyenne, retirées).
+La régression linéaire d'Arthur apprend une correction du gyromètre `omega ~ gyro W + B` (31 essais d'entraînement, 8 de test) :
+
+- W est proche de l'identité (erreur d'échelle 0,5 %, couplage d'axes jusqu'à 1,6 %), biais moyen d'environ 0,0015 rad/s ;
+- sur la vitesse instantanée, le gain est négligeable (0,2032 -> 0,2031 rad/s) : le bruit domine ;
+- sur l'orientation obtenue en intégrant le gyromètre seul pendant 3 minutes, l'erreur moyenne passe de 33,4° à 28,0°, avec 7 essais de test améliorés sur 8 ;
+- l'essai 15 est dégradé : le biais change d'un essai à l'autre, une correction unique ne peut pas s'y adapter. C'est ce qui motive une correction qui s'adapte (filtre de Kalman, réseau).
+
+Détails : `experiments/etape_A_broad.py`, `results/etape_A_broad.csv`, figures A6 et A7.
+
 ## Pièges à vérifier à chaque chargement
 
 - **Ordre du quaternion** : EuRoC donne `w, x, y, z`, SciPy attend `x, y, z, w`. OxIOD donne déjà `x, y, z, w`.
