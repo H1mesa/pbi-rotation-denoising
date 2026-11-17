@@ -1,0 +1,4 @@
+methode,pas,iterations,mse_train,mse_test,r2_test,parametres
+lineaire_10_variables,0.1,5000,6.56172143403309,6.667823722038747,0.7197329462786196,"{'w1': np.float64(6.585), 'w2': np.float64(7.143), 'w3': np.float64(-0.09), 'w4': np.float64(10.267), 'w5': np.float64(4.931), 'w6': np.float64(0.142), 'w7': np.float64(-0.408), 'w8': np.float64(-0.339), 'w9': np.float64(-0.459), 'w10': np.float64(-0.674), 'b': np.float64(0.691)}"
+friedman_bon_depart,0.005,60000,0.8956024887652313,0.9870737989579778,0.9585105610208099,"{'a': np.float64(10.031), 'k': np.float64(3.188), 'c': np.float64(19.37), 'd': np.float64(0.5), 'e': np.float64(9.967), 'f': np.float64(4.864), 'g': np.float64(0.054)}"
+friedman_depart_naif,0.005,60000,3.060934801300923,3.0155718280770496,0.8732471842729017,"{'a': np.float64(10.192), 'k': np.float64(3.201), 'c': np.float64(0.087), 'd': np.float64(2.938), 'e': np.float64(9.839), 'f': np.float64(5.038), 'g': np.float64(0.997)}"

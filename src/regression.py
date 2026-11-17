@@ -133,6 +133,85 @@ class ExpDecayModel:
 
 
 # ---------------------------------------------------------------------------
+# Modèle 3 : régression linéaire à plusieurs variables  y = X w + b
+# ---------------------------------------------------------------------------
+
+class LinearMultiModel:
+    """Généralisation du modèle 1 à d variables : y = w1 x1 + ... + wd xd + b.
+
+    theta = (w1, ..., wd, b), de taille d + 1. x est une matrice X (N, d).
+    """
+    name = "lineaire_multi"
+
+    def __init__(self, n_features):
+        self.n_features = n_features
+        self.param_names = tuple(f"w{i + 1}" for i in range(n_features)) + ("b",)
+
+    def predict(self, theta, X):
+        return X @ theta[:-1] + theta[-1]                       # (N, d) @ (d,) -> (N,)
+
+    def gradient(self, theta, X, y):
+        """Même calcul qu'en 1D, écrit avec des matrices : r = X w + b - y (résidus, (N,))
+            dL/dw = (2/N) X^T r     (d,)    -> une composante par variable
+            dL/db = (2/N) sum r
+        """
+        r = self.predict(theta, X) - y                          # (N,)
+        n = len(y)
+        return np.append(2.0 / n * X.T @ r, 2.0 / n * np.sum(r))
+
+    def closed_form(self, X, y):
+        """Moindres carrés exacts : on ajoute une colonne de 1 pour b, puis X^T X theta = X^T y."""
+        Xb = np.column_stack([X, np.ones(len(X))])              # (N, d + 1)
+        return np.linalg.solve(Xb.T @ Xb, Xb.T @ y)
+
+
+# ---------------------------------------------------------------------------
+# Modèle 4 : régression non linéaire "forme de Friedman"
+# ---------------------------------------------------------------------------
+
+class FriedmanModel:
+    """y = a sin(k x1 x2) + c (x3 - d)^2 + e x4 + f x5 + g,   theta = (a, k, c, d, e, f, g).
+
+    C'est la FORME de la fonction qui génère make_friedman1 (scikit-learn), avec des
+    paramètres inconnus. Vraies valeurs : a=10, k=pi, c=20, d=0.5, e=10, f=5, g=0.
+    k et d sont "à l'intérieur" (du sinus, du carré) : le modèle est non linéaire en theta,
+    il n'existe pas de formule exacte, on itère.
+
+    Idée à retenir pour la suite : quand on connaît la forme du phénomène physique
+    (ici la formule, plus tard R_mesuree = R_vraie Exp(eps)), on n'apprend que
+    quelques paramètres qui ont un sens.
+    """
+    name = "friedman"
+    param_names = ("a", "k", "c", "d", "e", "f", "g")
+
+    def predict(self, theta, X):
+        a, k, c, d, e, f, g = theta
+        u = X[:, 0] * X[:, 1]                                   # (N,)
+        return a * np.sin(k * u) + c * (X[:, 2] - d) ** 2 + e * X[:, 3] + f * X[:, 4] + g
+
+    def gradient(self, theta, X, y):
+        """Règle de la chaîne, avec u = x1 x2, r = résidu :
+            df/da = sin(k u)         df/dk = a u cos(k u)
+            df/dc = (x3 - d)^2       df/dd = -2 c (x3 - d)
+            df/de = x4    df/df = x5    df/dg = 1
+        puis dL/dtheta_j = (2/N) sum r * df/dtheta_j.
+        """
+        a, k, c, d, e, f, g = theta
+        u = X[:, 0] * X[:, 1]                                   # (N,)
+        r = self.predict(theta, X) - y                          # (N,)
+        J = np.column_stack([                                   # (N, 7) : une colonne par paramètre
+            np.sin(k * u),
+            a * u * np.cos(k * u),
+            (X[:, 2] - d) ** 2,
+            -2.0 * c * (X[:, 2] - d),
+            X[:, 3],
+            X[:, 4],
+            np.ones(len(y)),
+        ])
+        return 2.0 / len(y) * J.T @ r                           # (7,)
+
+
+# ---------------------------------------------------------------------------
 # L'optimiseur, commun à tous les modèles
 # ---------------------------------------------------------------------------
 

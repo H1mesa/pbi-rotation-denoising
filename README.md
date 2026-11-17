@@ -32,7 +32,30 @@ python -m pytest -v
 Téléchargez le jeu Auto MPG (UCI) et placez `auto-mpg.data` dans `data/` (ce fichier n'est pas versionné) :
 https://archive.ics.uci.edu/ml/machine-learning-databases/auto-mpg/auto-mpg.data
 
+BROAD (données réelles de rotation, IMU + caméras Optitrack) : copiez le dossier `data_mat/` du dépôt https://github.com/dlaidig/broad dans `data/broad/` (159 Mo, licence CC BY 4.0, non versionné).
+
 ### Étape A : régression linéaire et non linéaire
+
+Code d'Arthur (régression linéaire écrite à la main, une ou plusieurs sorties) :
+
+```
+python -m src.regression_arthur
+```
+
+Sur le jeu réel BROAD, correction du gyromètre par la régression d'Arthur, évaluée sur l'orientation :
+
+```
+python -m experiments.etape_A_broad
+```
+
+
+Sur le jeu synthétique `make_friedman1` (10 variables, proposé par l'encadrant) :
+
+```
+python -m experiments.etape_A_friedman
+```
+
+Sur le jeu réel Auto MPG :
 
 ```
 python -m experiments.etape_A_regression
@@ -45,13 +68,16 @@ Le script nettoie les données, entraîne les deux régressions par descente de 
 | Dossier | Contenu |
 |---|---|
 | `src/so3.py` | Outils SO(3) : `hat`, `vee`, `exp_map`, `log_map`, `geodesic_distance`, `is_rotation`, `project_to_so3`, `random_rotation`, `add_noise` |
-| `src/regression.py` | Régressions à la main : modèles linéaire et exponentiel, descente de gradient, gradient check |
+| `src/regression.py` | Régressions à la main : modèles linéaire, exponentiel, multivarié et Friedman, descente de gradient, gradient check |
+| `scripts_equipe/` | Régressions linéaire, polynomiale et exponentielle écrites par l'équipe (graine, split 80/20, vérification du gradient, solution exacte) |
+| `src/regression_arthur.py` | Régression linéaire d'Arthur Ritz (predict, loss, grad, boucle de descente), à plusieurs sorties |
+| `src/broad.py` | Chargement de BROAD, paires gyromètre / vraie vitesse de rotation, intégration du gyromètre sur SO(3) |
 | `src/auto_mpg.py` | Chargement et nettoyage du jeu réel Auto MPG |
 | `experiments/` | Scripts d'expérience |
 | `tests/` | Tests unitaires (propriétés mathématiques, comparaison avec SciPy) |
 | `results/` | Résultats chiffrés (CSV) |
 | `report/figures/` | Figures pour les rapports |
-| `docs/` | Comptes rendus d'étapes |
+| `docs/` | Comptes rendus d'étapes, [jeux de données de rotation](docs/donnees_rotation.md) |
 | `data/` | Données brutes (non versionnées) |
 
 ## Avancement
