@@ -34,6 +34,14 @@ https://archive.ics.uci.edu/ml/machine-learning-databases/auto-mpg/auto-mpg.data
 
 ### Étape A : régression linéaire et non linéaire
 
+Sur le jeu synthétique `make_friedman1` (10 variables, proposé par l'encadrant) :
+
+```
+python -m experiments.etape_A_friedman
+```
+
+Sur le jeu réel Auto MPG :
+
 ```
 python -m experiments.etape_A_regression
 ```
@@ -51,7 +59,7 @@ Le script nettoie les données, entraîne les deux régressions par descente de 
 | `tests/` | Tests unitaires (propriétés mathématiques, comparaison avec SciPy) |
 | `results/` | Résultats chiffrés (CSV) |
 | `report/figures/` | Figures pour les rapports |
-| `docs/` | Comptes rendus d'étapes |
+| `docs/` | Comptes rendus d'étapes, [jeux de données de rotation](docs/donnees_rotation.md) |
 | `data/` | Données brutes (non versionnées) |
 
 ## Avancement

@@ -5,7 +5,8 @@ Tests de src/regression.py et src/auto_mpg.py. Lancer : python -m pytest -v
 import numpy as np
 import pytest
 
-from src.regression import (LinearModel, ExpDecayModel, Standardizer, gradient_descent,
+from src.regression import (LinearModel, ExpDecayModel, LinearMultiModel, FriedmanModel,
+                            Standardizer, gradient_descent,
                             numerical_gradient, train_test_split, mse, r2_score)
 from src.auto_mpg import DEFAULT_PATH, load_raw, clean
 
@@ -19,9 +20,10 @@ def rng():
 
 # --- Gradient check : nos dérivées à la main = différences finies ----------
 
-@pytest.mark.parametrize("model", [LinearModel(), ExpDecayModel()], ids=lambda m: m.name)
+@pytest.mark.parametrize("model", [LinearModel(), ExpDecayModel(), LinearMultiModel(10), FriedmanModel()],
+                         ids=lambda m: m.name)
 def test_gradient_a_la_main_egal_differences_finies(model, rng):
-    x = rng.normal(size=100)
+    x = rng.uniform(size=(100, 10)) if model.name in ("lineaire_multi", "friedman") else rng.normal(size=100)
     y = rng.normal(size=100)
     for _ in range(5):
         theta = rng.normal(size=len(model.param_names))
@@ -48,6 +50,23 @@ def test_descente_exponentielle_retrouve_des_parametres_connus(rng):
     y = model.predict(vrai, x)
     theta, _ = gradient_descent(model, [1.0, 0.5, 0.0], x, y, lr=0.1, n_iter=20000)
     assert np.allclose(theta, vrai, atol=1e-3)
+
+
+def test_descente_lineaire_multi_retrouve_la_solution_exacte(rng):
+    X = rng.uniform(size=(300, 10))
+    y = X @ np.arange(1.0, 11.0) + 2.0 + 0.1 * rng.normal(size=300)
+    model = LinearMultiModel(10)
+    theta, _ = gradient_descent(model, np.zeros(11), X, y, lr=0.1, n_iter=20000)
+    assert np.allclose(theta, model.closed_form(X, y), atol=1e-4)
+
+
+def test_friedman_avec_les_vrais_parametres_et_sans_bruit(rng):
+    # La formule de make_friedman1 avec noise=0 doit être reproduite exactement
+    pytest.importorskip("sklearn")
+    from sklearn.datasets import make_friedman1
+    X, y = make_friedman1(n_samples=200, n_features=10, noise=0.0, random_state=0)
+    vrai = np.array([10.0, np.pi, 20.0, 0.5, 10.0, 5.0, 0.0])
+    assert np.allclose(FriedmanModel().predict(vrai, X), y)
 
 
 def test_initialisation_a_zero_bloque_le_parametre_b(rng):
