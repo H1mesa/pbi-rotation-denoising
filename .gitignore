@@ -11,3 +11,6 @@ data/*
 *.pdf
 img_projet.png
 Resum*_Reunion_PBI.txt
+
+# Graphe généré par Graphify (cache et coûts propres à chaque machine)
+graphify-out/
