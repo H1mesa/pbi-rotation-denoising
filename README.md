@@ -69,6 +69,7 @@ Le script nettoie les données, entraîne les deux régressions par descente de 
 |---|---|
 | `src/so3.py` | Outils SO(3) : `hat`, `vee`, `exp_map`, `log_map`, `geodesic_distance`, `is_rotation`, `project_to_so3`, `random_rotation`, `add_noise` |
 | `src/regression.py` | Régressions à la main : modèles linéaire, exponentiel, multivarié et Friedman, descente de gradient, gradient check |
+| `scripts_equipe/` | Régressions linéaire, polynomiale et exponentielle écrites par l'équipe (graine, split 80/20, vérification du gradient, solution exacte) |
 | `src/regression_arthur.py` | Régression linéaire d'Arthur Ritz (predict, loss, grad, boucle de descente), à plusieurs sorties |
 | `src/broad.py` | Chargement de BROAD, paires gyromètre / vraie vitesse de rotation, intégration du gyromètre sur SO(3) |
 | `src/auto_mpg.py` | Chargement et nettoyage du jeu réel Auto MPG |
